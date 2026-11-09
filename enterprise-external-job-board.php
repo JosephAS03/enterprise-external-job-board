@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Enterprise External Job Board
  * Description: External job board companion plugin for the Enterprise User Management internal site. Pulls job listings from the internal site and submits candidate applications back to it.
- * Version: 0.1.8
+ * Version: 0.1.9
  * Author: OpenAI
  * Requires at least: 6.0
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('EEJB_VERSION', '0.1.8');
+define('EEJB_VERSION', '0.1.9');
 define('EEJB_FILE', __FILE__);
 define('EEJB_DIR', plugin_dir_path(__FILE__));
 define('EEJB_URL', plugin_dir_url(__FILE__));
@@ -756,6 +756,7 @@ final class EEJB_Plugin {
 
         echo '<div class="eum-public-job-board">';
         echo '<style>.eum-public-job-board{max-width:1040px;margin:0 auto;color:#111827}.eum-public-job-board__hero,.eum-public-job-board__page,.eum-public-job-board__card{background:#fff;border:1px solid #dbe3ea;border-radius:18px;box-shadow:0 14px 34px rgba(15,23,42,.05)}.eum-public-job-board__hero{padding:28px 28px 22px;margin:0 0 18px;background:linear-gradient(180deg,#f7fbff 0%,#ffffff 100%)}.eum-public-job-board__eyebrow{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0f6cbd}.eum-public-job-board__heading{margin:0;font-size:32px;line-height:1.1}.eum-public-job-board__subheading{margin:12px 0 0;max-width:720px;font-size:16px;line-height:1.65;color:#475569}.eum-public-job-board__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}.eum-public-job-board__card{padding:22px}.eum-public-job-board__title{margin:0 0 10px;font-size:22px;line-height:1.2}.eum-public-job-board__title a{color:#0f172a;text-decoration:none}.eum-public-job-board__title a:hover{color:#0f6cbd}.eum-public-job-board__meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;padding:0;list-style:none}.eum-public-job-board__meta-item{padding:6px 10px;border-radius:999px;background:#f1f5f9;font-size:13px;line-height:1.3;color:#334155}.eum-public-job-board__excerpt{margin:0;color:#334155;line-height:1.7}.eum-public-job-board__actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.eum-public-job-board__button,.eum-public-job-board__link{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;text-decoration:none;font-weight:600}.eum-public-job-board__button{padding:11px 18px;background:#0f6cbd;color:#fff}.eum-public-job-board__button:hover{background:#0b5a9e;color:#fff}.eum-public-job-board__button--secondary{background:#fff;color:#0f172a;border:1px solid #cbd5e1}.eum-public-job-board__button--secondary:hover{background:#f8fafc;color:#0f172a}.eum-public-job-board__link{color:#0f6cbd}.eum-public-job-board__link:hover{text-decoration:underline}.eum-public-job-board__page{padding:28px}.eum-public-job-board__back{margin:0 0 16px}.eum-public-job-board__back a{color:#0f6cbd;text-decoration:none;font-weight:600}.eum-public-job-board__back a:hover{text-decoration:underline}.eum-public-job-board__section{margin-top:18px;padding:20px;border:1px solid #e2e8f0;border-radius:14px;background:#fff}.eum-public-job-board__section h4{margin:0 0 12px;font-size:18px}.eum-public-job-board__copy{color:#334155;line-height:1.7}.eum-public-job-board__copy p:first-child{margin-top:0}.eum-public-job-board__copy p:last-child{margin-bottom:0}.eum-public-job-board__summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}.eum-public-job-board__summary-card{padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0}.eum-public-job-board__summary-label{display:block;margin-bottom:6px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#64748b}.eum-public-job-board__form-wrap{padding:18px;border:1px solid #dbe3ea;border-radius:16px;background:#f8f9fa}@media (max-width:720px){.eum-public-job-board__hero,.eum-public-job-board__page,.eum-public-job-board__card{padding:20px}.eum-public-job-board__heading{font-size:26px}}</style>';
+        echo self::render_internal_compatible_styles_v2();
 
         if ($selected_job_id > 0) {
             $job = $job_map[$selected_job_id];
@@ -764,9 +765,9 @@ final class EEJB_Plugin {
             $apply_url = self::job_url_v2($selected_job_id, 'apply');
             $content = self::job_detail_content_v2($job);
             $requirements = (string) ($job['requirements'] ?? '');
-            echo '<p class="eum-public-job-board__back"><a href="' . esc_url(self::board_base_url_v2()) . '">&larr; Back to open positions</a></p>';
+            echo '<p class="eum-public-job-board__back"><a href="' . esc_url(self::board_base_url_v2()) . '">&larr; Back to job opportunities</a></p>';
             echo '<section class="eum-public-job-board__page">';
-            echo '<p class="eum-public-job-board__eyebrow">External Job Board</p>';
+            echo '<p class="eum-public-job-board__eyebrow">Job Opening</p>';
             echo '<h3 class="eum-public-job-board__heading">' . esc_html($title) . '</h3>';
             echo self::render_meta_list_v2($job);
             if ($selected_view === 'apply') {
@@ -783,8 +784,8 @@ final class EEJB_Plugin {
             echo '</section>';
         } else {
             echo '<section class="eum-public-job-board__hero">';
-            echo '<p class="eum-public-job-board__eyebrow">Hiring Now</p>';
-            echo '<h3 class="eum-public-job-board__heading">Open Positions</h3>';
+            echo '<p class="eum-public-job-board__eyebrow">Career Opportunities</p>';
+            echo '<h3 class="eum-public-job-board__heading">Job Opportunities</h3>';
             echo '<p class="eum-public-job-board__subheading">Choose a role to review the full posting before continuing to the application.</p>';
             echo '</section>';
             echo '<div class="eum-public-job-board__grid">';
@@ -803,6 +804,68 @@ final class EEJB_Plugin {
 
         echo '</div></div>';
         return ob_get_clean();
+    }
+
+    protected static function render_internal_compatible_styles_v2() {
+        return <<<'HTML'
+<style>
+.eum-public-job-board { max-width: 960px; margin: 0 auto; color: #222; font-family: Arial, Helvetica, sans-serif; }
+.eum-public-job-board .eum-public-job-board__hero,
+.eum-public-job-board .eum-public-job-board__page,
+.eum-public-job-board .eum-public-job-board__card { background: #fff; border: 0; border-radius: 0; box-shadow: none; }
+.eum-public-job-board .eum-public-job-board__hero { padding: 0 0 18px; margin: 0 0 4px; border-bottom: 1px solid #ccc; }
+.eum-public-job-board .eum-public-job-board__eyebrow { margin: 0 0 7px; color: #555; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.eum-public-job-board .eum-public-job-board__heading { margin: 0; color: #222; font-size: 28px; font-weight: 600; line-height: 1.25; }
+.eum-public-job-board .eum-public-job-board__subheading { max-width: 700px; margin: 8px 0 0; color: #555; font-size: 16px; line-height: 1.55; }
+.eum-public-job-board .eum-public-job-board__grid { display: grid; grid-template-columns: 1fr; gap: 0; }
+.eum-public-job-board .eum-public-job-board__card { padding: 20px 0; border-bottom: 1px solid #ddd; }
+.eum-public-job-board .eum-public-job-board__title { margin: 0 0 6px; font-size: 20px !important; font-weight: 600; line-height: 1.3; }
+.eum-public-job-board .eum-public-job-board__title a { color: #8b0000; text-decoration: none; }
+.eum-public-job-board .eum-public-job-board__title a:hover { color: #650000; text-decoration: underline; }
+.eum-public-job-board .eum-public-job-board__meta { display: flex; flex-wrap: wrap; gap: 0; margin: 0 0 10px; padding: 0; list-style: none; }
+.eum-public-job-board .eum-public-job-board__meta-item { padding: 0; border: 0; border-radius: 0; background: transparent; color: #555; font-size: 14px; line-height: 1.5; }
+.eum-public-job-board .eum-public-job-board__meta-item + .eum-public-job-board__meta-item::before { content: "·"; margin: 0 8px; color: #888; }
+.eum-public-job-board .eum-public-job-board__excerpt { margin: 0; color: #333; font-size: 15px; line-height: 1.6; }
+.eum-public-job-board .eum-public-job-board__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.eum-public-job-board .eum-public-job-board__button { min-height: 0; padding: 9px 14px; border: 1px solid #8b0000; border-radius: 4px !important; background: #8b0000; box-shadow: none !important; color: #fff; font-weight: 600; text-decoration: none; }
+.eum-public-job-board .eum-public-job-board__button:hover { border-color: #650000; background: #650000; color: #fff; }
+.eum-public-job-board .eum-public-job-board__button--secondary { border-color: #aaa; background: #fff; color: #333; }
+.eum-public-job-board .eum-public-job-board__button--secondary:hover { border-color: #666; background: #f5f5f5; color: #222; }
+.eum-public-job-board .eum-public-job-board__link,
+.eum-public-job-board .eum-public-job-board__back a { color: #8b0000; font-weight: 600; text-decoration: none; }
+.eum-public-job-board .eum-public-job-board__link:hover,
+.eum-public-job-board .eum-public-job-board__back a:hover { text-decoration: underline; }
+.eum-public-job-board .eum-public-job-board__page { padding: 20px 0; border-top: 1px solid #ddd; }
+.eum-public-job-board .eum-public-job-board__back { margin: 0 0 16px; }
+.eum-public-job-board .eum-public-job-board__section { margin-top: 18px; padding: 18px 0; border: 0; border-top: 1px solid #ddd; border-radius: 0; background: transparent; }
+.eum-public-job-board .eum-public-job-board__section h4 { margin: 0 0 10px; color: #222; font-size: 18px; }
+.eum-public-job-board .eum-public-job-board__copy { color: #333; line-height: 1.65; }
+.eum-public-job-board .eum-public-job-board__summary { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 18px; padding: 14px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+.eum-public-job-board .eum-public-job-board__summary-card { padding: 0; border: 0; border-radius: 0; background: transparent; color: #333; }
+.eum-public-job-board .eum-public-job-board__summary-label { margin-bottom: 3px; color: #666; font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+.eum-public-job-board .eum-public-job-board__form-wrap { padding: 18px; border: 1px solid #ddd; border-radius: 4px; background: #f7f7f7; }
+.eum-public-job-board .eum-public-job-board__notice { border-radius: 4px; box-shadow: none; }
+.eejb-wrap > .eejb-notice { border-radius: 4px; box-shadow: none; }
+.eum-public-job-board .eejb-application { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.eum-public-job-board .eejb-form { display: grid; gap: 14px; }
+.eum-public-job-board .eejb-form > p { margin: 0; }
+.eum-public-job-board .eejb-form h3 { margin: 18px 0 8px; font-size: 18px; }
+.eum-public-job-board .eejb-two-col { grid-template-columns: 1fr; gap: 0; }
+.eum-public-job-board .eejb-form input:not([type="checkbox"]):not([type="radio"]),
+.eum-public-job-board .eejb-form select,
+.eum-public-job-board .eejb-form textarea { width: 100%; min-height: 42px; border: 1px solid #cbd5e1 !important; border-radius: 12px !important; padding: 10px 12px !important; background: #fff; box-sizing: border-box; }
+.eum-public-job-board .eejb-form textarea { min-height: 110px; }
+.eum-public-job-board .eejb-repeater-item { border-radius: 4px; box-shadow: none; }
+.eum-public-job-board .eejb-form .button,
+.eum-public-job-board .eejb-form .button-primary { min-height: 0; padding: 9px 14px; border: 1px solid #8b0000; border-radius: 4px !important; background: #8b0000; box-shadow: none !important; color: #fff; font-weight: 600; }
+.eum-public-job-board .eejb-form .button:hover,
+.eum-public-job-board .eejb-form .button-primary:hover { border-color: #650000; background: #650000; color: #fff; }
+@media (max-width: 720px) {
+  .eum-public-job-board .eum-public-job-board__heading { font-size: 25px; }
+  .eum-public-job-board .eum-public-job-board__summary { gap: 14px; }
+}
+</style>
+HTML;
     }
 
     protected static function render_application_form_v2($job) {
@@ -1074,7 +1137,7 @@ final class EEJB_Plugin {
 
     protected static function render_meta_list_v2($job) {
         $meta = [];
-        foreach (['location', 'division', 'job_title', 'job_path'] as $key) {
+        foreach (['location', 'job_title'] as $key) {
             $value = trim((string) ($job[$key] ?? ''));
             if ($value !== '') $meta[] = $value;
         }
@@ -1089,9 +1152,7 @@ final class EEJB_Plugin {
         $cards = [];
         $map = [
             'location' => 'Location',
-            'division' => 'Division',
             'job_title' => 'Job Title',
-            'job_path' => 'Job Path',
         ];
         foreach ($map as $key => $label) {
             $value = trim((string) ($job[$key] ?? ''));
